@@ -1,6 +1,6 @@
 #!/bin/bash
 IMAGE=$1
-CONTAINER_NAME=TP_app
+CONTAINER_NAME=web
 
 # Stop previous container
 docker rm -f $CONTAINER_NAME 2>/dev/null

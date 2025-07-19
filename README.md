@@ -17,22 +17,53 @@ Ce projet met en place une application Flask simple déployée via une pipeline 
 
 ## Lancement local (dev)
 
-1. Avec Docker:
-   ```bash
-   docker build -t TP-app .
-   docker run -d -p 80:80 TP-app
-
-2. Avec Docker Compose:
-   ```bash
+1. Avec Docker Compose:
    docker-compose up --build -d
 
-3. Script de déploiement par Jenkins:
-   ```bash
-   ./deploy.sh mawed22/TP-app
+2. Nettoyer l’infrastructure  :
+   docker rm -f nomcontainer
+   docker rmi nomcontainer
 
-5. Nettoyer l’infrastructure  :
-   ```bash
-   docker rm -f TP_app
-   docker rmi TP-app
 
+
+
+
+### configuration jenkins
+*** Configuration des plugins Jenkins ***
+
+- Pour ton pipeline CI/CD Docker + déploiement SSH, installe ces plugins :
+
+- Pipeline (déjà présent dans Jenkins LTS)
+
+- Docker Pipeline (pour intégrer docker dans pipeline)
+
+- Credentials Binding Plugin (pour gérer variables secrètes)
+
+- SSH Agent Plugin (pour gérer les clés SSH dans pipeline)
+
+- Git Plugin (pour cloner le repo)
+
+
+*** Ajouter les Credentials dans Jenkins ***
+- Dans Jenkins → Credentials → Système → Global credentials
+
+- Ajoute ta clé SSH privée pour accéder à l’EC2 (ec2-key) → type SSH Username with private key
+
+- Ajoute tes identifiants Docker Hub (dockerhub-creds) → type Username with password
+
+***Variables d’environnement Jenkins (optionnel)***
+Tu peux configurer des variables globales Jenkins dans Manage Jenkins > Configure System > Global properties > Environment variables
+EC2_IP
+
+
+*** Résumé des bonnes pratiques ***
+- Essaye d’éviter sudo dans Jenkinsfile. Préfère régler les droits utilisateurs (groupe docker).
+
+- Toujours utiliser sshagent pour charger la clé SSH dans le pipeline.
+
+- Ajouter -o StrictHostKeyChecking=no pour éviter les blocages sur le fingerprint SSH.
+
+- Stocker les secrets (clé SSH, credentials docker) dans Jenkins Credentials.
+
+- Monter le socket docker dans Jenkins pour pouvoir builder/pusher.
 
