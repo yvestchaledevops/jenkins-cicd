@@ -67,3 +67,5 @@ EC2_IP
 
 - Monter le socket docker dans Jenkins pour pouvoir builder/pusher.
 
+
+- test ci via git
